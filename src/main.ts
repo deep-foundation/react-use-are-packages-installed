@@ -1,7 +1,7 @@
 import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
 import { useState, useEffect } from 'react';
 
-export function useArePackagesInstalled(param: UseIsPackageInstalledParam) {
+export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
   const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
   const { data, loading, error } = useDeepSubscription({
@@ -36,7 +36,7 @@ export function useArePackagesInstalled(param: UseIsPackageInstalledParam) {
 
 
 
-export interface UseIsPackageInstalledParam {
+export interface UseArePackagesInstalledParam {
   packageNames: Array<string>;
   shouldIgnoreResultWhenLoading?: boolean;
   onError?: ({ error }: { error: { message: string } }) => void;
