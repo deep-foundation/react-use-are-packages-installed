@@ -42,4 +42,4 @@ export interface UseArePackagesInstalledParam {
   onError?: ({ error }: { error: { message: string } }) => void;
 }
 
-export type PackageInstallationStatuses = Record<string, boolean|undefined> | undefined;
+export type PackageInstallationStatuses = Record<string, boolean> | undefined;
