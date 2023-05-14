@@ -31,7 +31,7 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
     setPackageInstallationStatuses(packageInstallationStatuses);
   }, [data, loading, error]);
 
-  return { isPackageInstalled: packageInstallationStatuses, loading, error };
+  return { packageInstallationStatuses, loading, error };
 }
 
 
