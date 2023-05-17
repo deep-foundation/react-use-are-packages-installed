@@ -25,7 +25,7 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
     }
     let packageInstallationStatuses: PackageInstallationStatuses = {};
     packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
-      packageInstallationStatuses!.packageName = !!(data && data.find(item => item.value?.value === packageName));
+      packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
       return packageInstallationStatuses;
     }, packageInstallationStatuses);
     setPackageInstallationStatuses(packageInstallationStatuses);
