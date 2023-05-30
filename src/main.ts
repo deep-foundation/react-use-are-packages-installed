@@ -29,7 +29,7 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
       return packageInstallationStatuses;
     }, packageInstallationStatuses);
     setPackageInstallationStatuses(packageInstallationStatuses);
-  }, [data, loading, error]);
+  }, []);
 
   return { packageInstallationStatuses, loading, error };
 }
