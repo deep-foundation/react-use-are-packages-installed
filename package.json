@@ -18,11 +18,10 @@
   "files": [
     "/dist"
   ],
-  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.0.4"
   },
   "peerDependencies": {
-    "@deep-foundation/deeplinks": "~0.0.146"
+    "@deep-foundation/deeplinks": "~0.0.181"
   }
 }
