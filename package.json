@@ -1,10 +1,11 @@
 {
   "name": "@deep-foundation/react-use-are-packages-installed",
+  "type": "module",
   "keywords": [
     "deep-package",
     "deep-package-integration"
   ],
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A React hook that checks whether deep packages are installed",
   "repository": {
     "type": "git",
