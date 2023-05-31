@@ -28,7 +28,7 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
           );
           return packageInstallationStatuses;
         },
-        packageInstallationStatuses ?? {}
+        {}
       );
   }
 
