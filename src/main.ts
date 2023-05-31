@@ -1,7 +1,7 @@
 import {
   UseDeepSubscriptionResult,
   useDeepSubscription,
-} from '@deep-foundation/deeplinks/imports/client';
+} from '@deep-foundation/deeplinks/imports/client.js';
 import { useState, useEffect, useMemo, useRef } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
