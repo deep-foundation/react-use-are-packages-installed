@@ -1,4 +1,4 @@
-import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
+import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client.js';
 import { useState, useEffect } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
