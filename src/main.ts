@@ -1,44 +1,48 @@
-import {
-  DeepClient,
-  UseDeepSubscriptionResult,
-  useDeepSubscription,
-} from '@deep-foundation/deeplinks/imports/client.js';
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
+import { useState, useEffect } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
-  const { packageNames , deep} = param;
-
-  const { data, loading, error } = deep.useDeepSubscription({
+  const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
+  const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
+  const [mounted, setMounted] = useState(false);
+  const { data, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
     },
     string: {
       value: {
-        _in: packageNames,
+        _in: packageNames
       },
     },
   });
+  useEffect(() => {
+    if (shouldIgnoreResultWhenLoading && loading) {
+      return;
+    }
+    if (error) {
+      onError?.({ error });
+      setPackageInstallationStatuses(undefined);
+      return;
+    }
+    let packageInstallationStatuses: PackageInstallationStatuses = {};
+    packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
+      packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
+      return packageInstallationStatuses;
+    }, packageInstallationStatuses);
+    setPackageInstallationStatuses(packageInstallationStatuses);
+  }, [data, loading, error, mounted]);
 
-  let packageInstallationStatuses: PackageInstallationStatuses = undefined;
-  if (data) {
-    packageInstallationStatuses =
-      packageNames.reduce<PackageInstallationStatuses>(
-        (packageInstallationStatuses, packageName) => {
-          packageInstallationStatuses![packageName] = !!data.find(
-            (item) => item.value?.value === packageName
-          );
-          return packageInstallationStatuses;
-        },
-        {}
-      );
-  }
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return { packageInstallationStatuses, loading, error };
 }
 
 export interface UseArePackagesInstalledParam {
-  deep: DeepClient;
   packageNames: Array<string>;
+  shouldIgnoreResultWhenLoading?: boolean;
+  onError?: ({ error }: { error: { message: string } }) => void;
 }
 
 export type PackageInstallationStatuses = Record<string, boolean> | undefined;
