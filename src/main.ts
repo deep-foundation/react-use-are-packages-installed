@@ -1,6 +1,7 @@
 import {
+  DeepClient,
   useDeepSubscription,
-} from '@deep-foundation/deeplinks/imports/client';
+} from '@deep-foundation/deeplinks/imports/client.js';
 import { useMemo } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
@@ -31,12 +32,13 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
         {} as PackageInstallationStatuses
       );
     }
-  }, [data, packageNames]);
+  }, [data]);
 
   return { packageInstallationStatuses, loading, error };
 }
 
 export interface UseArePackagesInstalledParam {
+  deep: DeepClient;
   packageNames: Array<string>;
 }
 

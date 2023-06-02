@@ -1,10 +1,10 @@
 import dotEnv from 'dotenv';
-dotEnv.config();
-import { DeepClient } from '@deep-foundation/deeplinks/imports/client';
-import { generateApolloClient } from '@deep-foundation/hasura/client';
+import { DeepClient } from '@deep-foundation/deeplinks/imports/client.js';
+import { generateApolloClient } from '@deep-foundation/hasura/client.js';
 import { renderHook, waitFor } from '@testing-library/react';
 import { useArePackagesInstalled } from '../src/main';
 import { assert } from 'chai';
+dotEnv.config();
 
 const requiredEnvNames = ['GRAPHQL_PATH', 'TOKEN', 'PACKAGE_NAMES'];
 
