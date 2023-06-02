@@ -1,13 +1,10 @@
 import {
-  UseDeepSubscriptionResult,
   useDeepSubscription,
 } from '@deep-foundation/deeplinks/imports/client';
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames } = param;
-
-  const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
 
   const { data, loading, error } = useDeepSubscription({
     type_id: {
@@ -20,23 +17,21 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
     },
   });
 
-  useEffect(() => {
+  const packageInstallationStatuses: PackageInstallationStatuses | undefined = useMemo(() => {
     if (!data) {
-      setPackageInstallationStatuses(undefined);
+      return undefined;
     } else {
-      const newPackageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>(
-        (packageInstallationStatuses, packageName) => {
-          packageInstallationStatuses![packageName] = !!data.find(
+      return packageNames.reduce<PackageInstallationStatuses>(
+        (acc, packageName) => {
+          acc[packageName] = !!data.find(
             (item) => item.value?.value === packageName
           );
-          return packageInstallationStatuses;
+          return acc;
         },
-        packageInstallationStatuses ?? {}
+        {} as PackageInstallationStatuses
       );
-
-      setPackageInstallationStatuses(newPackageInstallationStatuses);
     }
-  }, [data]);
+  }, [data, packageNames]);
 
   return { packageInstallationStatuses, loading, error };
 }
@@ -45,4 +40,4 @@ export interface UseArePackagesInstalledParam {
   packageNames: Array<string>;
 }
 
-export type PackageInstallationStatuses = Record<string, boolean> | undefined;
+export type PackageInstallationStatuses = Record<string, boolean>;
