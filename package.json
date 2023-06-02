@@ -15,7 +15,7 @@
     "build": "tsc",
     "remove-dist": "fse remove dist",
     "clean-build": "npm run remove-dist && npm run build",
-    "test": "npm run build && jest  --config jest.config.js *.js"
+    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js *.js"
   },
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
