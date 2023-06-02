@@ -1,20 +1,20 @@
 import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client.js';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
   const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
-  const stablePackageNames = useMemo(() => packageNames, [packageNames]);
   const { data, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
     },
     string: {
       value: {
-        _in: stablePackageNames
+        _in: packageNames
       },
     },
   });
+  const prevDataRef = useRef(data);
 
   useEffect(() => {
     if (shouldIgnoreResultWhenLoading && loading) {
@@ -25,16 +25,20 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
       setPackageInstallationStatuses(undefined);
       return;
     }
-    let packageInstallationStatuses: PackageInstallationStatuses = {};
-    packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
-      packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
-      return packageInstallationStatuses;
-    }, packageInstallationStatuses);
-    setPackageInstallationStatuses(packageInstallationStatuses);
+    if (data !== prevDataRef.current) {
+      let packageInstallationStatuses: PackageInstallationStatuses = {};
+      packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
+        packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
+        return packageInstallationStatuses;
+      }, packageInstallationStatuses);
+      setPackageInstallationStatuses(packageInstallationStatuses);
+    }
+    prevDataRef.current = data;
   }, [data, loading, error]);
 
   return { packageInstallationStatuses, loading, error };
 }
+
 
 export interface UseArePackagesInstalledParam {
   packageNames: Array<string>;
