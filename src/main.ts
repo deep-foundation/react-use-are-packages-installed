@@ -1,10 +1,10 @@
 import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client.js';
-import { useState, useLayoutEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
   const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
-  const { data, loading, error } = useDeepSubscription({
+  const { data: originalData, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
     },
@@ -15,7 +15,9 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
     },
   });
 
-  useLayoutEffect(() => {
+  const data = useMemo(() => originalData, [originalData]);
+
+  useEffect(() => {
     if (shouldIgnoreResultWhenLoading && loading) {
       return;
     }
