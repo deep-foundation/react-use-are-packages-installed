@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
-import { DeepClient } from '@deep-foundation/deeplinks/imports/client.js';
+import { DeepClient, DeepProvider } from '@deep-foundation/deeplinks/imports/client.js';
 import { generateApolloClient } from '@deep-foundation/hasura/client.js';
 import { render, waitFor } from '@testing-library/react';
 import { useArePackagesInstalled } from '../src/main';
-import { ApolloProvider } from '@apollo/react-hooks';
+import { ApolloProvider } from '@apollo/client/index.js';
 import { assert } from 'chai';
 import React from 'react';
 dotenv.config();
@@ -37,7 +37,9 @@ describe('main', () => {
 
     render(
       <ApolloProvider client={apolloClient}>
-        <TestComponent />
+          <DeepProvider>
+            <TestComponent />
+          </DeepProvider>
       </ApolloProvider>
     );
 
