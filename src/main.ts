@@ -1,10 +1,14 @@
 import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client.js';
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Link } from "@deep-foundation/deeplinks/imports/minilinks";
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
   const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
-  const { data: originalData, loading, error } = useDeepSubscription({
+
+  const dataRef = useRef<Link<number>[] | undefined>(undefined);
+
+  const { data, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
     },
@@ -15,8 +19,6 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
     },
   });
 
-  const data = useMemo(() => originalData, [originalData]);
-
   useEffect(() => {
     if (shouldIgnoreResultWhenLoading && loading) {
       return;
@@ -26,12 +28,17 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
       setPackageInstallationStatuses(undefined);
       return;
     }
-    let packageInstallationStatuses: PackageInstallationStatuses = {};
-    packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
-      packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
-      return packageInstallationStatuses;
-    }, packageInstallationStatuses);
-    setPackageInstallationStatuses(packageInstallationStatuses);
+
+    if (JSON.stringify(data) !== JSON.stringify(dataRef.current)) {
+      let packageInstallationStatuses: PackageInstallationStatuses = {};
+      packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
+        packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
+        return packageInstallationStatuses;
+      }, packageInstallationStatuses);
+      setPackageInstallationStatuses(packageInstallationStatuses);
+    }
+
+    dataRef.current = data;
   }, [data, loading, error]);
 
   return { packageInstallationStatuses, loading, error };
