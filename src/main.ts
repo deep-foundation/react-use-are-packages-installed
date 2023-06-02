@@ -5,9 +5,9 @@ import {
 import { useMemo } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
-  const { packageNames } = param;
+  const { packageNames, deep } = param;
 
-  const { data, loading, error } = useDeepSubscription({
+  const { data, loading, error } = deep.useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
     },
