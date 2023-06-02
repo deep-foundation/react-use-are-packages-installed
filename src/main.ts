@@ -1,41 +1,37 @@
-import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
+import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client.js';
 import { useState, useEffect, useMemo } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
   const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
+  const stablePackageNames = useMemo(() => packageNames, [packageNames]);
   const { data, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
     },
     string: {
       value: {
-        _in: packageNames
+        _in: stablePackageNames
       },
     },
   });
 
-  const memoizedPackageInstallationStatuses = useMemo(() => {
+  useEffect(() => {
     if (shouldIgnoreResultWhenLoading && loading) {
-      return undefined;
+      return;
     }
     if (error) {
       onError?.({ error });
-      return undefined;
+      setPackageInstallationStatuses(undefined);
+      return;
     }
     let packageInstallationStatuses: PackageInstallationStatuses = {};
     packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
       packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
       return packageInstallationStatuses;
     }, packageInstallationStatuses);
-    return packageInstallationStatuses;
-  }, [data, loading, error, packageNames]);
-
-  useEffect(() => {
-    if (memoizedPackageInstallationStatuses !== undefined) {
-      setPackageInstallationStatuses(memoizedPackageInstallationStatuses);
-    }
-  }, [memoizedPackageInstallationStatuses]);
+    setPackageInstallationStatuses(packageInstallationStatuses);
+  }, [data, loading, error]);
 
   return { packageInstallationStatuses, loading, error };
 }
