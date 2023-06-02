@@ -1,10 +1,9 @@
-import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client.js';
-import { useState, useEffect } from 'react';
+import { useDeepSubscription } from '@deep-foundation/deeplinks/imports/client';
+import { useState, useEffect, useMemo } from 'react';
 
 export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
   const { packageNames, shouldIgnoreResultWhenLoading = false, onError } = param;
   const [packageInstallationStatuses, setPackageInstallationStatuses] = useState<PackageInstallationStatuses>(undefined);
-  const [mounted, setMounted] = useState(false);
   const { data, loading, error } = useDeepSubscription({
     type_id: {
       _id: ['@deep-foundation/core', 'Package'],
@@ -15,26 +14,28 @@ export function useArePackagesInstalled(param: UseArePackagesInstalledParam) {
       },
     },
   });
-  useEffect(() => {
+
+  const memoizedPackageInstallationStatuses = useMemo(() => {
     if (shouldIgnoreResultWhenLoading && loading) {
-      return;
+      return undefined;
     }
     if (error) {
       onError?.({ error });
-      setPackageInstallationStatuses(undefined);
-      return;
+      return undefined;
     }
     let packageInstallationStatuses: PackageInstallationStatuses = {};
     packageInstallationStatuses = packageNames.reduce<PackageInstallationStatuses>((packageInstallationStatuses, packageName) => {
       packageInstallationStatuses![packageName] = !!(data && data.find(item => item.value?.value === packageName));
       return packageInstallationStatuses;
     }, packageInstallationStatuses);
-    setPackageInstallationStatuses(packageInstallationStatuses);
-  }, [data, loading, error, mounted]);
+    return packageInstallationStatuses;
+  }, [data, loading, error, packageNames]);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    if (memoizedPackageInstallationStatuses !== undefined) {
+      setPackageInstallationStatuses(memoizedPackageInstallationStatuses);
+    }
+  }, [memoizedPackageInstallationStatuses]);
 
   return { packageInstallationStatuses, loading, error };
 }
