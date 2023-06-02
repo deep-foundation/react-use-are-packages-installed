@@ -19,11 +19,12 @@ requiredEnvNames.forEach((name) => {
 const graphQlPath = process.env.GRAPHQL_PATH!;
 const token = process.env.TOKEN!;
 const packageNames = process.env.PACKAGE_NAMES!.split(',');
-const timeout = process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 10000;
+const timeout = process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 1000;
 
 const apolloClient = generateApolloClient({
   path: graphQlPath,
   ssl: true,
+  ws: true
 });
 const deep = new DeepClient({ apolloClient, token });
 
@@ -31,7 +32,8 @@ describe('main', () => {
   it('installed packages', async () => {
     let testResult;
     const TestComponent = () => {
-      testResult = useArePackagesInstalled({ deep, packageNames });
+      testResult = useArePackagesInstalled({  packageNames });
+      console.log("testresult",testResult)
       return null;
     };
 
@@ -42,6 +44,8 @@ describe('main', () => {
           </DeepProvider>
       </ApolloProvider>
     );
+
+
 
     await waitFor(
       () => {
