@@ -5,7 +5,7 @@
     "deep-package",
     "deep-package-integration"
   ],
-  "version": "0.3.0",
+  "version": "0.3.12",
   "description": "A React hook that checks whether deep packages are installed",
   "repository": {
     "type": "git",
