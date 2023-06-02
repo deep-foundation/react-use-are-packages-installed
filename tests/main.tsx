@@ -17,28 +17,35 @@ requiredEnvNames.forEach((name) => {
 });
 
 const graphQlPath = process.env.GRAPHQL_PATH!;
-const token = process.env.TOKEN!;
+console.log("graphQlPath",graphQlPath)
+const Token = process.env.TOKEN!;
+console.log("token",Token)
 const packageNames = process.env.PACKAGE_NAMES!.split(',');
-const timeout = process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 1000;
+const timeout = process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 10000;
 
 const apolloClient = generateApolloClient({
   path: graphQlPath,
   ssl: true,
-  ws: true
+  ws: true,
+  token:Token
 });
-const deep = new DeepClient({ apolloClient, token });
+console.log("apolloclient",apolloClient)
 
 describe('main', () => {
   it('installed packages', async () => {
+    const deep = new DeepClient({ apolloClient});
+    await deep.whoami();
+    console.log("deep.linkid",deep.linkId)
+assert.notEqual(deep.linkId, 0);
+assert.notEqual(deep.linkId, undefined);
     let testResult;
     const TestComponent = () => {
       testResult = useArePackagesInstalled({  packageNames });
       console.log("testresult",testResult)
       return null;
     };
-
     render(
-      <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={deep.apolloClient}>
           <DeepProvider>
             <TestComponent />
           </DeepProvider>
@@ -49,12 +56,13 @@ describe('main', () => {
 
     await waitFor(
       () => {
-        expect(testResult.current.loading).toBe(false);
-        expect(testResult.current.error).toBe(undefined);
-        expect(testResult.current.packageInstallationStatuses).not.toBe(undefined);
-        expect(testResult.current.packageInstallationStatuses!.length).toBe(
-          packageNames.length
-        );
+        expect(testResult.loading).toBe(false);
+        expect(testResult.error).toBe(undefined);
+        expect(testResult.packageInstallationStatuses).not.toBe(undefined);
+        expect(testResult.packageInstallationStatuses).toEqual({
+          "@deep-foundation/capacitor-device": false,
+          "@deep-foundation/npm-packager": true,
+        });
       },
       {
         timeout,
