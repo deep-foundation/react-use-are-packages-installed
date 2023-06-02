@@ -1,7 +1,7 @@
 import type { Config } from 'jest'
 
 const jestConfig: Config = {
-  testEnvironment: 'node',
+  testEnvironment: 'jsdom',
   verbose: true,
 }
 
