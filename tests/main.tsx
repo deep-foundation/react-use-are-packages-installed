@@ -16,43 +16,48 @@ requiredEnvNames.forEach((name) => {
   }
 });
 
-const graphQlPath = process.env.GRAPHQL_PATH!;
-console.log("graphQlPath",graphQlPath)
-const Token = process.env.TOKEN!;
-console.log("token",Token)
+const path = process.env.GRAPHQL_PATH!;
+console.log("graphQlPath", path)
+
+const token = process.env.TOKEN!;
+console.log("token", token)
+
 const packageNames = process.env.PACKAGE_NAMES!.split(',');
 const timeout = process.env.TIMEOUT ? parseInt(process.env.TIMEOUT) : 10000;
 
 const apolloClient = generateApolloClient({
-  path: graphQlPath,
+  path,
   ssl: true,
   ws: true,
-  token:Token
+  token
 });
-console.log("apolloclient",apolloClient)
+console.log("apolloclient", apolloClient)
 
 describe('main', () => {
   it('installed packages', async () => {
-    const deep = new DeepClient({ apolloClient});
+
+    const deep = new DeepClient({ apolloClient });
     await deep.whoami();
-    console.log("deep.linkid",deep.linkId)
-assert.notEqual(deep.linkId, 0);
-assert.notEqual(deep.linkId, undefined);
+
+    console.log("deep.linkid", deep.linkId)
+
+    assert.notEqual(deep.linkId, 0);
+    assert.notEqual(deep.linkId, undefined);
+
     let testResult;
     const TestComponent = () => {
-      testResult = useArePackagesInstalled({  packageNames });
-      console.log("testresult",testResult)
+      testResult = useArePackagesInstalled({ packageNames });
+      console.log("testresult", testResult)
       return null;
     };
+
     render(
       <ApolloProvider client={deep.apolloClient}>
-          <DeepProvider>
-            <TestComponent />
-          </DeepProvider>
+        <DeepProvider>
+          <TestComponent />
+        </DeepProvider>
       </ApolloProvider>
     );
-
-
 
     await waitFor(
       () => {
