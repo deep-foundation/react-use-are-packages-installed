@@ -15,7 +15,8 @@
     "build": "tsc",
     "remove-dist": "fse remove dist",
     "clean-build": "npm run remove-dist && npm run build",
-    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js *.js"
+    "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js *.js",
+    "npm-release": "npm-release"
   },
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
@@ -24,6 +25,7 @@
   ],
   "devDependencies": {
     "@atao60/fse-cli": "^0.1.7",
+    "@deep-foundation/npm-release": "^0.0.16",
     "@testing-library/react": "^14.0.0",
     "@types/chai": "^4.3.5",
     "@types/dotenv": "^8.2.0",
