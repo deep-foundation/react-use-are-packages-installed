@@ -11,7 +11,9 @@
     "url": "https://github.com/deep-foundation/react-use-are-packages-installed"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "npm run build:lib && npm run build:test",
+    "build:lib": "tsc --project tsconfig.json",
+    "build:test": "tsc --project tsconfig.test.json",
     "remove-dist": "fse remove dist",
     "clean-build": "npm run remove-dist && npm run build",
     "test": "npm run build && NODE_OPTIONS=--experimental-vm-modules jest --config jest.config.js *.js",
