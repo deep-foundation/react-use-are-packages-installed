@@ -11,7 +11,7 @@
     "url": "https://github.com/deep-foundation/react-use-are-packages-installed"
   },
   "scripts": {
-    "build": "npm run build:lib && npm run build:test",
+    "build-lib-and-test": "npm run build:lib && npm run build:test",
     "build:lib": "tsc --project tsconfig.json",
     "build:test": "tsc --project tsconfig.test.json",
     "remove-dist": "fse remove dist",
