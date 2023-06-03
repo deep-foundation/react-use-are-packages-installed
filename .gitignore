@@ -135,5 +135,6 @@ dist
 
 # jest tests
 
+dist/tests/main.*
 dist/jest.config.*
 dist/main.test.*
