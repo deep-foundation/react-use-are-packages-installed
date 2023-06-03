@@ -2,7 +2,7 @@
 
 # Goal
 
-This package provides a React hook that checks whether deep packages are installed.
+Provide a React hook that checks whether deep packages are installed.
 
 # How to use?
 
