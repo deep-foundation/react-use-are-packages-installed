@@ -22,6 +22,7 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
       - run: npm i
       - run: npm run build
+      - run: cp dist/main.js
       - uses: JS-DevTools/npm-publish@v2
         with:
           token: ${{ secrets.NPM_TOKEN }}
