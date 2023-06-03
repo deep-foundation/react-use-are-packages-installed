@@ -9,9 +9,5 @@ This package provides a React hook that checks whether deep packages are install
 ```ts
 const { isPackageInstalled, loading, error } = useIsPackageInstalled({
   packageNames: ['@deep-foundation/deep-memo', '@deep-foundation/payments'],
-  shouldIgnoreResultWhenLoading: true,
-  onError: (error) => {
-    console.error(error.message);
-  },
 });
 ```
