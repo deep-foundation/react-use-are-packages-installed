@@ -5,13 +5,14 @@ on:
     branches: main
     paths:
      - package.json
+     - .github/workflows/main.yml
   workflow_dispatch:
 
 env:
   NODE_VERSION: 18
 
 jobs:
-  build-and-test:
+  main:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,19 +21,6 @@ jobs:
           node-version: ${{env.NODE_VERSION}}
       - run: npm i
       - run: npm run build
-      - run: npm test
-
-  publish-npm:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: JS-DevTools/npm-publish@v2
         with:
-          node-version: ${{env.NODE_VERSION}}
-          registry-url: https://registry.npmjs.org/
-      - run: npm i
-      - run: npm run build
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          token: ${{ secrets.NPM_TOKEN }}
