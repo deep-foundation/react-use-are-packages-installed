@@ -2,7 +2,6 @@
   "name": "@deep-foundation/react-use-are-packages-installed",
   "type": "module",
   "keywords": [
-    "deep-package",
     "deep-package-integration"
   ],
   "version": "1.0.0",
