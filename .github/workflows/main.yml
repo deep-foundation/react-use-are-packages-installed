@@ -2,7 +2,8 @@ name: Main CI & CD workflow
 
 on:
   push:
-    branches: main
+    branches: 
+     - main
     paths:
      - package.json
      - .github/workflows/main.yml
