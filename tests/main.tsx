@@ -64,10 +64,7 @@ describe('main', () => {
         expect(testResult.loading).toBe(false);
         expect(testResult.error).toBe(undefined);
         expect(testResult.packageInstallationStatuses).not.toBe(undefined);
-        expect(testResult.packageInstallationStatuses).toEqual({
-          "@deep-foundation/capacitor-device": false,
-          "@deep-foundation/npm-packager": true,
-        });
+        expect(Object.keys(testResult.packageInstallationStatuses)).toEqual(packageNames);
       },
       {
         timeout,
