@@ -42,3 +42,9 @@ export interface UseArePackagesInstalledParam {
 }
 
 export type PackageInstallationStatuses = Record<string, boolean> | undefined;
+
+export interface UseArePackagesInstalledResult {
+  packageInstallationStatuses: PackageInstallationStatuses;
+  loading: boolean;
+  error: Error;
+}
