@@ -84,12 +84,13 @@ describe('main', () => {
           undefined,
           'Package installation statuses is undefined'
         );
+        const packageInstallationStatuses = deepSubscriptionResult.packageInstallationStatuses!;
         assert.equal(
-          Object.keys(deepSubscriptionResult.packageInstallationStatuses).length,
+          Object.keys(packageInstallationStatuses).length,
           packageNames.length,
           'Number of packages installed is not equal to number of packages requested'
         );
-        Object.entries(deepSubscriptionResult.packageInstallationStatuses).forEach(
+        Object.entries(packageInstallationStatuses).forEach(
           ([packageName, status]) => {
             assert.isTrue(
               status,
