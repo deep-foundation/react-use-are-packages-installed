@@ -7,7 +7,7 @@ Provide a React hook that checks whether deep packages are installed.
 # How to use?
 
 ```ts
-const { isPackageInstalled, loading, error } = useIsPackageInstalled({
+const { packageInstallationStatuses, loading, error } = useIsPackageInstalled({
   packageNames: ['@deep-foundation/deep-memo', '@deep-foundation/payments'],
 });
 ```
