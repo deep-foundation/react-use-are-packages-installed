@@ -43,6 +43,7 @@
     "@deep-foundation/deeplinks": "^0.0.189"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.15"
+    "@apollo/client": "^3.7.15",
+    "@freephoenix888/deepclient-extensions": "^0.5.0"
   }
 }
